@@ -7,17 +7,35 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
+struct ContentView: View 
+{
+    var body: some View 
+    {
+        VStack 
+        {
+			Image("orange-icon")
+				.resizable()
+				.frame(width: 77, height: 77)
+//            Image(systemName: "globe")
+//                .imageScale(.large)
+//                .foregroundStyle(.tint)
+				.padding()
             Text("Hello, world!")
+			
         }
+		.font(.largeTitle)
         .padding()
+		.foregroundColor(.orange)
     }
 }
+
+
+
+
+
+
+
+
 
 #Preview {
     ContentView()

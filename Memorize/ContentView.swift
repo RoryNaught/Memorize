@@ -11,24 +11,37 @@ struct ContentView: View
 {
     var body: some View 
     {
-        VStack 
-        {
-			Image("orange-icon")
-				.resizable()
-				.frame(width: 77, height: 77)
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundStyle(.tint)
-				.padding()
-            Text("Hello, world!")
-			
-        }
-		.font(.largeTitle)
-        .padding()
+		HStack
+		{
+			cardView(isFaceUp: true)
+			cardView()
+			cardView()
+			cardView()
+		}
 		.foregroundColor(.orange)
+		.padding()
     }
 }
 
+struct cardView: View 
+{
+	var isFaceUp: Bool = false
+	var body: some View
+	{
+		ZStack
+		{
+			if isFaceUp
+			{
+				RoundedRectangle(cornerRadius:33).foregroundColor(.white)
+				RoundedRectangle(cornerRadius:33).strokeBorder(lineWidth: 2)
+				Text("🍊").font(.largeTitle)
+			} else
+			{
+				RoundedRectangle(cornerRadius:12)
+			}
+		}
+	}
+}
 
 
 

@@ -13,9 +13,9 @@ let animalEmojis: Array<String> = ["🐶","🐱","🐭","🐹","🐰","🦊","�
 
 struct ContentView: View {
 	
-	@State var cardCount: Int = 4
 	@State var greetingText: String = "Memorize!"
 	@State var theme: String = "Halloween"
+	@State var shuffledEmojis: [String] = []
 	
 	var body: some View {
 		VStack {
@@ -33,69 +33,50 @@ struct ContentView: View {
 			}
 			
 			Spacer()
-			cardCountAdjusters
 		}
 		.padding()
+		.onAppear() {
+			shuffledEmojis = createPairs(from: halloweenEmojis, pairs: 8)
+		}
 	}
 	
 	func themeButton(themeName: String, color: Color) -> some View {
-		Button(action: {
-			theme = themeName
-		}, label: {
-			Text(themeName)
-				.padding()
-				.background(color.opacity(0.2))
-				.cornerRadius(8)
-				.foregroundColor(color)
-		})
-	}
-	
-	
-	var cardCountAdjusters: some View {
-		HStack {
-			cardRemover
-			Spacer()
-			cardAdder
+			Button(action: {
+				theme = themeName
+				switch themeName {
+				case "People":
+					shuffledEmojis = createPairs(from: peopleEmojis, pairs: 9)
+				case "Animals":
+					shuffledEmojis = createPairs(from: animalEmojis, pairs: 10)
+				default:
+					shuffledEmojis = createPairs(from: halloweenEmojis, pairs: 8)
+				}
+			}, label: {
+				Text(themeName)
+					.padding()
+					.background(color.opacity(0.2))
+					.cornerRadius(8)
+					.foregroundColor(color)
+			})
 		}
-		.imageScale(.large)
-		.font(.largeTitle)
+	
+	func createPairs(from emojiArray: [String], pairs: Int) -> [String] {
+		   let selectedEmojis = Array(emojiArray.prefix(pairs))
+		   let pairedEmojis = selectedEmojis + selectedEmojis  // Create pairs
+		   return pairedEmojis.shuffled()  // Shuffle the array to randomize the order
 	}
 	
-	func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-		Button(action: {
-			cardCount += offset
-		}, label: {
-			Image(systemName: symbol)
-		})
-		.disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
-	}
 	
+
 	var cards: some View {
 		LazyVGrid( columns: [GridItem(.adaptive(minimum: 120))] )  {
-			ForEach(0..<cardCount, id: \.self) { index in
-				cardView(content: emojis[index]).aspectRatio(2/3, contentMode: .fit)
+			ForEach(0..<shuffledEmojis.count, id: \.self) { index in
+				cardView(content: shuffledEmojis[index]).aspectRatio(2/3, contentMode: .fit)
 			}
 		}.foregroundColor(.orange)
 	}
 	
-	var cardRemover: some View {
-		return cardCountAdjuster(by: -1, symbol:"rectangle.stack.badge.minus.fill")
-	}
-	
-	var cardAdder: some View {
-		return cardCountAdjuster(by: 1, symbol:"rectangle.stack.badge.plus.fill")
-	}
-	
-	var emojis: Array<String> {
-		switch theme {
-		case "People":
-			return peopleEmojis
-		case "Animals":
-			return animalEmojis
-		default:
-			return halloweenEmojis
-		}
-	}
+
 	
 }
 
@@ -109,7 +90,7 @@ struct cardView: View {
 			Group {
 				base.foregroundColor(.white)
 				base.strokeBorder(lineWidth: 2)
-				Text(content).font(.largeTitle)
+				Text(content).font(.system(size: 50))
 			}
 			.opacity(isFaceUp ? 1 : 0)
 			base.fill().opacity(isFaceUp ? 0 : 1)

@@ -7,21 +7,49 @@
 
 import SwiftUI
 
+let halloweenEmojis : Array<String> = ["👹","🎃","👻","💀","👺","🕷️","🕸️","😱","🙀","☠️","🍬","😈"]
+let peopleEmojis: Array<String> = ["👮‍♂️","👨‍⚕️","👨‍🍳","👨‍🌾","👨‍🏫","👨‍🏭","👨‍🔧","👨‍🔬","👩‍🚀","👩‍🎨","👨‍🚒","👨‍💻"]
+let animalEmojis: Array<String> = ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁"]
+
 struct ContentView: View {
-	let emojis : Array<String> = ["👹","🎃","👻","💀","👺","🕷️","🕸️","😱","🙀","☠️","🍬","😈"]
 	
 	@State var cardCount: Int = 4
+	@State var greetingText: String = "Memorize!"
+	@State var theme: String = "Halloween"
 	
 	var body: some View {
 		VStack {
+			Greeting(content: greetingText)
+			
+			// Theme Buttons
+			HStack {
+				themeButton(themeName: "Halloween", color: .orange)
+				themeButton(themeName: "People", color: .blue)
+				themeButton(themeName: "Animals", color: .green)
+			}
+			
 			ScrollView {
 				cards
 			}
+			
 			Spacer()
 			cardCountAdjusters
 		}
 		.padding()
 	}
+	
+	func themeButton(themeName: String, color: Color) -> some View {
+		Button(action: {
+			theme = themeName
+		}, label: {
+			Text(themeName)
+				.padding()
+				.background(color.opacity(0.2))
+				.cornerRadius(8)
+				.foregroundColor(color)
+		})
+	}
+	
 	
 	var cardCountAdjusters: some View {
 		HStack {
@@ -58,6 +86,17 @@ struct ContentView: View {
 		return cardCountAdjuster(by: 1, symbol:"rectangle.stack.badge.plus.fill")
 	}
 	
+	var emojis: Array<String> {
+		switch theme {
+		case "People":
+			return peopleEmojis
+		case "Animals":
+			return animalEmojis
+		default:
+			return halloweenEmojis
+		}
+	}
+	
 }
 
 struct cardView: View {
@@ -81,8 +120,42 @@ struct cardView: View {
 	}
 }
 
-
-
+struct Greeting: View {
+	let content: String
+	
+	var body: some View {
+		
+		ZStack {
+					// Outline layer: Repeated Text with an offset
+					Text(content)
+						.font(.largeTitle)
+						.fontWeight(.bold)
+						.foregroundColor(.black)  // Color for the outline
+						.offset(x: 1, y: 1)       // Slight offset for the outline
+					Text(content)
+						.font(.largeTitle)
+						.fontWeight(.bold)
+						.foregroundColor(.black)
+						.offset(x: -1, y: -1)
+					Text(content)
+						.font(.largeTitle)
+						.fontWeight(.bold)
+						.foregroundColor(.black)
+						.offset(x: 1, y: -1)
+					Text(content)
+						.font(.largeTitle)
+						.fontWeight(.bold)
+						.foregroundColor(.black)
+						.offset(x: -1, y: 1)
+					
+					// Main Text layer: The main text with the desired color
+					Text(content)
+						.font(.largeTitle)
+						.fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+						.foregroundColor(.orange)  // Main text color
+				}
+	}
+}
 
 
 

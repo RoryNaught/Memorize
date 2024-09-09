@@ -7,56 +7,62 @@
 
 import SwiftUI
 
-let halloweenEmojis : Array<String> = ["👹","🎃","👻","💀","👺","🕷️","🕸️","😱","🙀","☠️","🍬","😈"]
+let vehicleEmojis : Array<String> = ["🚗","🚕","🚙","🚌","🛻","🚚","🚛","🚜","🏎️","🚓","🚒","🚐"]
 let peopleEmojis: Array<String> = ["👮‍♂️","👨‍⚕️","👨‍🍳","👨‍🌾","👨‍🏫","👨‍🏭","👨‍🔧","👨‍🔬","👩‍🚀","👩‍🎨","👨‍🚒","👨‍💻"]
 let animalEmojis: Array<String> = ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁"]
 
 struct ContentView: View {
 	
 	@State var greetingText: String = "Memorize!"
-	@State var theme: String = "Halloween"
+	@State var theme: String = "Vehicles"
 	@State var shuffledEmojis: [String] = []
 	
 	var body: some View {
 		VStack {
-			Greeting(content: greetingText)
+			Greeting(content: greetingText).padding(1)
 			
 			// Theme Buttons
 			HStack {
-				themeButton(themeName: "Halloween", color: .orange)
-				themeButton(themeName: "People", color: .blue)
-				themeButton(themeName: "Animals", color: .green)
+				themeButton(themeName: "Vehicles", symbolName: "truck.pickup.side.fill", color: .orange)
+				themeButton(themeName: "People", symbolName: "person.3.fill", color: .blue)
+				themeButton(themeName: "Animals", symbolName: "pawprint.fill", color: .green)
 			}
 			
 			ScrollView {
 				cards
 			}
 			
-			Spacer()
+//			Spacer()
 		}
-		.padding()
+		.padding(12)
 		.onAppear() {
-			shuffledEmojis = createPairs(from: halloweenEmojis, pairs: 8)
+			shuffledEmojis = createPairs(from: vehicleEmojis, pairs: 8)
 		}
 	}
 	
-	func themeButton(themeName: String, color: Color) -> some View {
+	func themeButton(themeName: String, symbolName: String, color: Color) -> some View {
 			Button(action: {
 				theme = themeName
 				switch themeName {
 				case "People":
-					shuffledEmojis = createPairs(from: peopleEmojis, pairs: 9)
+					shuffledEmojis = createPairs(from: peopleEmojis, pairs: 12)
 				case "Animals":
-					shuffledEmojis = createPairs(from: animalEmojis, pairs: 10)
+					shuffledEmojis = createPairs(from: animalEmojis, pairs: 12)
 				default:
-					shuffledEmojis = createPairs(from: halloweenEmojis, pairs: 8)
+					shuffledEmojis = createPairs(from: vehicleEmojis, pairs: 12)
 				}
 			}, label: {
-				Text(themeName)
-					.padding()
-					.background(color.opacity(0.2))
-					.cornerRadius(8)
-					.foregroundColor(color)
+				VStack {
+					Image(systemName: symbolName) // Use the SF symbol
+						.font(.system(size: 27, weight: .light, design: .default))        // Adjust size of the symbol
+						.foregroundColor(color)   // Symbol color
+					Text(themeName)               // Text below the symbol
+						.font(.caption)           // Adjust font size for the text
+						.foregroundColor(color)   // Text color
+				}
+				.padding(7)
+				.background(color.opacity(0.2))   // Background color with opacity
+				.cornerRadius(6)
 			})
 		}
 	
@@ -69,7 +75,7 @@ struct ContentView: View {
 	
 
 	var cards: some View {
-		LazyVGrid( columns: [GridItem(.adaptive(minimum: 120))] )  {
+		LazyVGrid( columns: [GridItem(.adaptive(minimum: 77))] )  {
 			ForEach(0..<shuffledEmojis.count, id: \.self) { index in
 				cardView(content: shuffledEmojis[index]).aspectRatio(2/3, contentMode: .fit)
 			}
@@ -82,7 +88,7 @@ struct ContentView: View {
 
 struct cardView: View {
 	let content: String
-	@State var isFaceUp = true
+	@State var isFaceUp = false
 	
 	var body: some View {
 		ZStack {
@@ -132,6 +138,7 @@ struct Greeting: View {
 					// Main Text layer: The main text with the desired color
 					Text(content)
 						.font(.largeTitle)
+//						.system(size: 27, weight: .light, design: .default))
 						.fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
 						.foregroundColor(.orange)  // Main text color
 				}
